@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    body
+      form(action='/signup', method='post')
+        h2 Sign Up
+          input(name='username', type='text', placeholder='Username', required="")
+          input(name='password', type='password', placeholder='Password', required="")
+          input(type='submit', value='Submit')
+      h4
+        | Already have an account?
+        a(href='/login') login
+       

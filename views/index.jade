@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  h1= title
+  //p Welcome to #{title}
+  h1= t
+  if ideas
+  each idea in ideas
+    .ideas 
+      //h2= idea.ideas_id
+    h3= idea.ideas_title
+    h3= idea.ideas_description
+    script(type='text/javascript').
+    -for(let i=0; i<idea.comments.length; i++){
+      h6= idea.comments[i].comment_comments
+    -}
+    h4= idea.likes.length + " Likes"
+    form(action='/comments', method='post')
+        input(type='text', name='comment', placeholder='Comment Here')
+        br
+        input(class="postID", type='text', name='postID', value=idea.ideas_id)
+        br
+        //p(name='postID' value=idea.id)= idea.id
+        input(type='submit', value='Comment')
+      form(action='/like', method='post')
+        input(type='submit', value='Like')
+        input(class='postID', type='text', name='postID', value=idea.ideas_id)
+  else
+    h2 no ideas yet
+  form(action='/home', method='post')
+    br
+    label Idea
+    br
+    input(type='text', name='title', placeholder='Enter idea')
+    br
+    label Description
+    br
+    input(type='text', name='description', placeholder='Enter idea description')
+    br
+    input(type='submit', value='Post')
