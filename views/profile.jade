@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    h1 INSTAGRAM
+    a(href='/home') Back to Home
+    h2 My Posts
+    if posts
+        each post in posts
+            h3= post.title
+            h4= post.description
+            form(action='/delete', method='POST')
+                input(type='text', name='postID', value=post.id)
+                input(type='submit', value='Delete')
+    else   
+        h1 No posts yet 

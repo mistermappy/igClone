@@ -1,9 +1,7 @@
 var express = require('express');
 var router = express.Router();
-//var app = express();
-//var multer = require('multer')
-//var passport = require('passport');
-//require('./strategies/passport-local')(passport); 
+var passport = require('passport');
+var session = require('express-session');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('users', 'postgres', 'nppsjuoll', {
@@ -23,12 +21,13 @@ sequelize
 var Ideas = require('./models/ideas.js')(sequelize,Sequelize);
 var Comments = require('./models/comments.js')(sequelize, Sequelize);
 var Likes = require('./models/likes.js')(sequelize, Sequelize);
-//var Users = require('./models/users.js')(sequelize, Sequelize);
+var Users = require('./models/users.js')(sequelize, Sequelize);
 
 Ideas.hasMany(Comments, {foreignKey: "postID"});
 Ideas.hasMany(Likes, {foreignKey: "commentID"});
 Comments.belongsTo(Ideas, {foreignKey: "postID"});
-
+Ideas.belongsTo(Users, {foreignKey: "userID"});
+Likes.belongsTo(Users, {foreignKey: "userID"});
 //var db = require('./models/index.js');
 //console.log(db)
 //Comments.belongsTo(Ideas);
@@ -37,8 +36,8 @@ Comments.belongsTo(Ideas, {foreignKey: "postID"});
 //app.set('views', __dirname + '/views');
 //app.set('view engine', 'jade');
 
-//require('./config/config')
-//require('./strategies/passport-local.js')(passport); 
+require('./config/config')
+require('./strategies/passport-local.js')(passport); 
 
 var bodyParser = require('body-parser');
 
@@ -47,7 +46,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-//router.use(passport.initialize());
+router.use(session({
+    key: 'user_sid',
+    secret: 'pixel pie',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        expires: 3600000
+     }
+}));
+router.use(passport.initialize());
 router.use(bodyParser());
 router.use(logger('dev'));
 router.use(express.json());
@@ -79,7 +87,27 @@ function compareValues(key, order='asc') {
         (order == 'desc') ? (comparison * -1) : comparison
       );
     };
-  }
+};
+
+let userID; 
+
+router.get('/signup', (req, res) => {
+    res.render('signup')
+})
+
+router.post('/signup', passport.authenticate('local-signup'), (req, res) => {
+    res.redirect('/login');
+})
+
+router.get('/login', (req, res) => {
+    res.render('login');
+})
+
+router.post('/login', passport.authenticate('local-login'), (req, res) => {
+    console.log(req.user.id)
+    userID = req.user.id
+    res.redirect('/home');
+})
   
 router.get('/home', (req, res)=>{
 
@@ -133,10 +161,12 @@ router.post('/home', (req, res)=>{
          .then(()=>{
              return Ideas.create({
                  title: req.body.title,
-                 description: req.body.description
+                 description: req.body.description,
+                 userID: userID
              }) 
          })
          .then(()=>{
+             console.log("IT WORKED?", userID)
              res.redirect('/home')
          })
 });
@@ -154,25 +184,66 @@ router.post('/comments', (req, res)=>{
             });
 });
 
-/*router.post('/deleteComment', (req, res) => {
-    Comments.findOne({
-
-    })
-    console.log('logging..', )
-    res.redirect('/')
-})*/
-
 router.post('/like', (req, res) => {
     Likes.sync() 
          .then(()=>{
              return Likes.create({
                  likes: 1,
-                 commentID: req.body.postID
+                 commentID: req.body.postID,
+                 userID: userID
              })
          })
          .then(()=>{
              res.redirect('/home')
          })
+});
+
+/*router.get('/likes', (req, res) => {
+    Likes.findAll({
+        where: {
+            userID: userID
+        }
+    }).then(likes => {
+        if(likes){
+            Likes.destroy({
+                where: {
+                    userID: likes.userID
+                }
+            })
+        }
+        else {
+            return Likes.create({
+                likes: 1,
+                commentID: req.body.postID,
+                userID: userID
+            })
+        }
+    })
+})*/
+
+router.get('/profile', (req, res) => {
+    //res.render('profile');
+    Ideas.findAll({
+        where: {
+            userID: userID
+        }
+    })
+    .then(posts => {
+        console.log(posts)
+        console.log(userID)
+        res.render('profile', {posts:posts})
+    })
+})
+
+router.post('/delete', (req, res) => {
+    Ideas.destroy({
+        where: {
+            id: req.body.postID
+        }
+    }).then(()=>{
+        console.log('successfully deleted instance..');
+        res.redirect('/profile')
+    })
 })
 
 module.exports = router; 
