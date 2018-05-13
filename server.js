@@ -141,7 +141,8 @@ router.get('/home', (req, res)=>{
                         return Object.assign(
                             {},
                             {
-                                likes_like: likes.id
+                                likes_like: likes.id,
+                                user_who_liked: likes.userID
                             }
                         )
                     })
@@ -184,7 +185,7 @@ router.post('/comments', (req, res)=>{
             });
 });
 
-router.post('/like', (req, res) => {
+/*router.post('/likes', (req, res) => {
     Likes.sync() 
          .then(()=>{
              return Likes.create({
@@ -196,30 +197,33 @@ router.post('/like', (req, res) => {
          .then(()=>{
              res.redirect('/home')
          })
-});
+});*/
 
-/*router.get('/likes', (req, res) => {
+router.post('/likes', (req, res) => {
     Likes.findAll({
-        where: {
+        where:{
             userID: userID
         }
     }).then(likes => {
-        if(likes){
-            Likes.destroy({
-                where: {
-                    userID: likes.userID
-                }
-            })
-        }
-        else {
+        console.log(likes.length)
+        if(likes.length == 0){
             return Likes.create({
-                likes: 1,
+                likes: 1, 
                 commentID: req.body.postID,
                 userID: userID
             })
         }
+        else {
+            Likes.destroy({
+                where:{
+                    userID: userID
+                }
+            })
+        }
+    }).then(()=>{
+        res.redirect('/home')
     })
-})*/
+});
 
 router.get('/profile', (req, res) => {
     //res.render('profile');
