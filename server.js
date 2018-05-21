@@ -202,10 +202,11 @@ router.post('/comments', (req, res)=>{
 router.post('/likes', (req, res) => {
     Likes.findAll({
         where:{
-            userID: userID
+            userID: userID,
+            commentID: req.body.postID  
         }
     }).then(likes => {
-        console.log(likes.length)
+        console.log(likes)
         if(likes.length == 0){
             return Likes.create({
                 likes: 1, 
@@ -216,7 +217,8 @@ router.post('/likes', (req, res) => {
         else {
             Likes.destroy({
                 where:{
-                    userID: userID
+                    userID: userID,
+                    commentID: req.body.postID
                 }
             })
         }
