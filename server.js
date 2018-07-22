@@ -2,6 +2,27 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var session = require('express-session');
+var multer = require('multer'); 
+var sharp = require('sharp');
+var userPhotos = require('./model/photo');
+var aws = require('aws-sdk');
+var multers3 = require('multer-s3');
+var imager = require('multer-imager');
+var s3 = new aws.S3()
+var fs = require('fs')
+
+var upload = multer({
+    storage : multers3({
+        s3: s3, 
+        bucket: 'instagram-clone-photos-version1',
+        metadata: function (req, file, cb) {
+            cb(null, {fieldName: file.fieldname});
+        },
+        key: function (req, file, cb) {
+            cb(null, Date.now().toString())
+        }
+    })
+});
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('users', 'postgres', 'nppsjuoll', {
@@ -26,8 +47,10 @@ var Users = require('./models/users.js')(sequelize, Sequelize);
 Ideas.hasMany(Comments, {foreignKey: "postID"});
 Ideas.hasMany(Likes, {foreignKey: "commentID"});
 Comments.belongsTo(Ideas, {foreignKey: "postID"});
-Ideas.belongsTo(Users, {foreignKey: "userID"});
-Likes.belongsTo(Users, {foreignKey: "userID"});
+Ideas.belongsTo(Users, {foreignKey: 'userName'});
+Likes.belongsTo(Users, {foreignKey: "userName"});
+//Likes.belongsTo(Ideas, {foreignKey: 'userName'});
+
 //var db = require('./models/index.js');
 //console.log(db)
 //Comments.belongsTo(Ideas);
@@ -53,7 +76,7 @@ router.use(session({
     saveUninitialized: false,
     cookie: { 
         expires: 3600000
-     }
+    }
 }));
 router.use(passport.initialize());
 router.use(bodyParser());
@@ -62,7 +85,6 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: false }));
 router.use(cookieParser());
 router.use(express.static(path.join(__dirname, 'public')));
-
 
 /**/
 function compareValues(key, order='asc') {
@@ -76,7 +98,6 @@ function compareValues(key, order='asc') {
         a[key].toUpperCase() : a[key];
       const varB = (typeof b[key] === 'string') ? 
         b[key].toUpperCase() : b[key];
-  
       let comparison = 0;
       if (varA > varB) {
         comparison = 1;
@@ -89,13 +110,22 @@ function compareValues(key, order='asc') {
     };
 };
 
-let userID; 
+//let userID;
+//let userName = require('./strategies/passport-local.js')(userName) 
+
+router.get('/', (req, res) => {
+    res.render('home');
+})
 
 router.get('/signup', (req, res) => {
     res.render('signup')
 })
 
-router.post('/signup', passport.authenticate('local-signup'), (req, res) => {
+router.get('/signuperror', (req, res) => {
+    res.render('signuperror');
+})
+
+router.post('/signup', passport.authenticate('local-signup', {successRedirect: '/login', failureRedirect: '/signuperror'}), (req, res) => {
     res.redirect('/login');
 })
 
@@ -103,14 +133,22 @@ router.get('/login', (req, res) => {
     res.render('login');
 })
 
-router.post('/login', passport.authenticate('local-login'), (req, res) => {
-    console.log(req.user.id)
-    userID = req.user.id
-    res.redirect('/home');
+router.get('/loginerror', (req, res) => {
+    res.render('loginerror');
 })
-  
-router.get('/home', (req, res)=>{
 
+router.post('/login', passport.authenticate('local-login'), (req, res) => {
+    console.log(req.user.username)
+    userName = req.user.username; 
+    res.redirect('/home');
+});
+
+router.get('/faq', (req, res) => {
+    res.render('faq')
+});
+
+router.get('/home', (req, res)=>{
+  
     Ideas.findAll({
         include: [
             {
@@ -142,7 +180,7 @@ router.get('/home', (req, res)=>{
                             {},
                             {
                                 likes_like: likes.id,
-                                user_who_liked: likes.userID
+                                user_who_liked: likes.userName
                             }
                         )
                     })
@@ -153,23 +191,18 @@ router.get('/home', (req, res)=>{
         let sortedObj = resObj.sort(compareValues("ideas_id"))
         //console.log(sortedObj);
         res.render('index', {title: "Instagram", ideas: sortedObj})
-    })
-  
+    });
 });
 
-router.post('/home', (req, res)=>{
-    Ideas.sync()
-         .then(()=>{
-             return Ideas.create({
-                 title: req.body.title,
-                 description: req.body.description,
-                 userID: userID
-             }) 
-         })
-         .then(()=>{
-             console.log("IT WORKED?", userID)
-             res.redirect('/home')
-         })
+router.post('/home', upload.single('imageUpload'), (req, res)=>{
+    //console.log(req.file)
+    Ideas.create({
+        title: req.body.title,
+        description: req.file.key,
+        userName: userName
+    }).then(() => {
+        res.redirect('/home');
+    });
 });
 
 router.post('/comments', (req, res)=>{
@@ -185,58 +218,44 @@ router.post('/comments', (req, res)=>{
             });
 });
 
-/*router.post('/likes', (req, res) => {
-    Likes.sync() 
-         .then(()=>{
-             return Likes.create({
-                 likes: 1,
-                 commentID: req.body.postID,
-                 userID: userID
-             })
-         })
-         .then(()=>{
-             res.redirect('/home')
-         })
-});*/
-
 router.post('/likes', (req, res) => {
     Likes.findAll({
         where:{
-            userID: userID,
-            commentID: req.body.postID  
-        }
+            userName: userName,
+            commentID: req.body.postID
+              }
     }).then(likes => {
-        console.log(likes)
+        console.log('why are likes empty', likes.length)
+        //when clicked, app reveals the last userName who clicked it before current one. 
         if(likes.length == 0){
             return Likes.create({
                 likes: 1, 
                 commentID: req.body.postID,
-                userID: userID
+                userName: userName
+            }).then(()=>{
+                res.redirect('/home')
             })
         }
         else {
             Likes.destroy({
                 where:{
-                    userID: userID,
+                    userName: userName,
                     commentID: req.body.postID
                 }
+            }).then(()=>{
+                res.redirect('/home')
             })
         }
-    }).then(()=>{
-        res.redirect('/home')
     })
 });
 
 router.get('/profile', (req, res) => {
-    //res.render('profile');
     Ideas.findAll({
         where: {
-            userID: userID
+            userName: userName
         }
     })
     .then(posts => {
-        console.log(posts)
-        console.log(userID)
         res.render('profile', {posts:posts})
     })
 })

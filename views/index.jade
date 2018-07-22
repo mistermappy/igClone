@@ -6,19 +6,21 @@ block content
   a(href='/profile') profile
   br
   a(href='/login') logout
+  br
   if ideas
   each idea in ideas
     .ideas 
       //h2= idea.ideas_id
     h3= idea.ideas_title
-    h3= idea.ideas_description
+    img(src='https://s3-us-west-2.amazonaws.com/instagram-clone-photos-version1/' + idea.ideas_description, id='images')
+    br
     script(type='text/javascript').
     -for(let i=0; i<idea.comments.length; i++){
       h6= idea.comments[i].comment_comments
     -}
-    span Liked by:
+    span Liked by: 
     -for(let i=0; i<idea.likes.length; i++){
-      span= idea.likes[i].user_who_liked + ' '
+      span= idea.likes[i].user_who_liked + ', '
     -}
     form(action='/comments', method='post')
         input(type='text', name='comment', placeholder='Comment Here')
@@ -32,7 +34,9 @@ block content
         input(class='postID', type='text', name='postID', value=idea.ideas_id)
   else
     h2 no ideas yet
-  form(action='/home', method='post')
+  form(action='/home', method='post', enctype='multipart/form-data')
+    br
+    input(type='file', id='', name='imageUpload')
     br
     label Idea
     br

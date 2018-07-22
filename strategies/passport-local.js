@@ -3,7 +3,7 @@ var bcrypt = require('bcrypt');
 var User = require('../models').Users
 var saltRounds = 10;
 
-module.exports = function(passport){
+module.exports = function(passport){ 
 
 	function getUserParams(req) {
     var body = req.body
@@ -70,8 +70,7 @@ module.exports = function(passport){
 			}
 			else {
 			bcrypt.compare(password, user.password, function(err, res){
-		
-				if (err){
+				if (err) {
 					return done(err)
 				}
 				if (!res){

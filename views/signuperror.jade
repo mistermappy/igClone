@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    h1 iClone 
+          nav
+          a(href='/signup') Sign Up 
+          br
+          a(href='/login') Log In
+          br
+          a(href='') FAQ 
+    body
+      form(action='/signup', method='post')
+        h2 Sign Up
+          input(name='username', type='text', placeholder='Username', required="")
+          input(name='password', type='password', placeholder='Password', required="")
+          input(type='submit', value='Submit')
+    #error 
+        h5 Username already taken
+      h4 Already have an account?
+        a(href='/login') login
