@@ -137,11 +137,26 @@ router.get('/loginerror', (req, res) => {
     res.render('loginerror');
 })
 
-router.post('/login', passport.authenticate('local-login'), (req, res) => {
+/*router.post('/login', passport.authenticate('local-login'), (req, res) => {
     console.log(req.user.username)
     userName = req.user.username; 
     res.redirect('/home');
-});
+});*/
+
+router.post('/login', function(req, res, next) {
+    passport.authenticate('local-login', function(err, user, info) {
+      if (err) { 
+          return next(err); 
+      };
+      if (!user) { 
+          return res.redirect('/loginerror'); 
+      };
+      console.log(user.username); 
+      userName = user.username; 
+      return res.redirect('/home');
+
+    })(req, res, next);
+  })
 
 router.get('/faq', (req, res) => {
     res.render('faq')
@@ -225,8 +240,6 @@ router.post('/likes', (req, res) => {
             commentID: req.body.postID
               }
     }).then(likes => {
-        console.log('why are likes empty', likes.length)
-        //when clicked, app reveals the last userName who clicked it before current one. 
         if(likes.length == 0){
             return Likes.create({
                 likes: 1, 
