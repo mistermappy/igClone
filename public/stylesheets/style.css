@@ -24,3 +24,8 @@ a {
 #error {
   color: red; 
 }
+
+#likes-font {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-style: italic;
+}

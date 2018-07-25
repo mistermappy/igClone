@@ -20,7 +20,12 @@ block content
     -}
     span Liked by: 
     -for(let i=0; i<idea.likes.length; i++){
-      span= idea.likes[i].user_who_liked + ', '
+      -if(idea.likes[i] === idea.likes[idea.likes.length-1]){
+        span(id='likes-font')= idea.likes[i].user_who_liked
+      -}
+      -else{
+        span(id='likes-font')= idea.likes[i].user_who_liked + ', '
+      -}
     -}
     form(action='/comments', method='post')
         input(type='text', name='comment', placeholder='Comment Here')
