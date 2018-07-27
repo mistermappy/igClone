@@ -3,7 +3,6 @@ var router = express.Router();
 var passport = require('passport');
 var session = require('express-session');
 var multer = require('multer'); 
-var sharp = require('sharp');
 var userPhotos = require('./model/photo');
 var aws = require('aws-sdk');
 var multers3 = require('multer-s3');
@@ -27,7 +26,9 @@ var upload = multer({
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize('d2rp83vuathmlu', 'qqfapouvhewocy', 'c4a6920ceb8cd92f47466624c28136032fbca36e2c80a7e021a3068285886116', {
     host: 'ec2-107-22-192-11.compute-1.amazonaws.com',
-    dialect: 'postgres'
+    port: 5432,
+    dialect: 'postgres',
+    ssl: true
 })
 
 sequelize
@@ -109,9 +110,6 @@ function compareValues(key, order='asc') {
       );
     };
 };
-
-//let userID;
-//let userName = require('./strategies/passport-local.js')(userName) 
 
 router.get('/', (req, res) => {
     res.render('home');
