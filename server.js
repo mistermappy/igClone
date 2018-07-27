@@ -11,7 +11,7 @@ var imager = require('multer-imager');
 var s3 = new aws.S3()
 var fs = require('fs')
 
-/*var upload = multer({
+var upload = multer({
     storage : multers3({
         s3: s3, 
         bucket: 'instagram-clone-photos-version1',
@@ -25,8 +25,8 @@ var fs = require('fs')
 });
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('users', 'postgres', 'nppsjuoll', {
-    host: 'localhost',
+const sequelize = new Sequelize('d2rp83vuathmlu', 'qqfapouvhewocy', 'c4a6920ceb8cd92f47466624c28136032fbca36e2c80a7e021a3068285886116', {
+    host: 'ec2-107-22-192-11.compute-1.amazonaws.com',
     dialect: 'postgres'
 })
 
@@ -86,7 +86,7 @@ router.use(express.urlencoded({ extended: false }));
 router.use(cookieParser());
 router.use(express.static(path.join(__dirname, 'public')));
 
-/*
+/**/
 function compareValues(key, order='asc') {
     return function(a, b) {
       if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -136,12 +136,6 @@ router.get('/login', (req, res) => {
 router.get('/loginerror', (req, res) => {
     res.render('loginerror');
 })
-
-/*router.post('/login', passport.authenticate('local-login'), (req, res) => {
-    console.log(req.user.username)
-    userName = req.user.username; 
-    res.redirect('/home');
-});
 
 router.post('/login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, info) {
@@ -282,10 +276,6 @@ router.post('/delete', (req, res) => {
         console.log('successfully deleted instance..');
         res.redirect('/profile')
     })
-})*/
-
-router.get('/', (req, res) => {
-    res.status(200).send('works now!');
 })
 
 module.exports = router; 
