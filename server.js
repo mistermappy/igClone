@@ -3,7 +3,6 @@ var router = express.Router();
 var passport = require('passport');
 var session = require('express-session');
 var multer = require('multer'); 
-var userPhotos = require('./model/photo');
 var aws = require('aws-sdk');
 var multers3 = require('multer-s3');
 var imager = require('multer-imager');

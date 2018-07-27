@@ -17,11 +17,12 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "postgres",
-    "password": "nppsjuoll",
-    "database": "users",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "username": "qqfapouvhewocy",
+    "password": "c4a6920ceb8cd92f47466624c28136032fbca36e2c80a7e021a3068285886116",
+    "database": "d2rp83vuathmlu",
+    "host": "ec2-107-22-192-11.compute-1.amazonaws.com",
+    "dialect": "postgres",
+    "use_env_variable": "DATABASE_URL"
   }
 }
 
