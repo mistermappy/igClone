@@ -9,7 +9,7 @@ var imager = require('multer-imager');
 var s3 = new aws.S3()
 var fs = require('fs')
 
-var upload = multer({
+/*var upload = multer({
     storage : multers3({
         s3: s3, 
         bucket: 'instagram-clone-photos-version1',
@@ -87,7 +87,7 @@ router.use(express.urlencoded({ extended: false }));
 router.use(cookieParser());
 router.use(express.static(path.join(__dirname, 'public')));
 
-/**/
+/*
 function compareValues(key, order='asc') {
     return function(a, b) {
       if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -110,6 +110,8 @@ function compareValues(key, order='asc') {
       );
     };
 };
+
+*/
 
 router.get('/', (req, res) => {
     res.render('home');
