@@ -111,7 +111,7 @@ function compareValues(key, order='asc') {
     };
 };
 
-*/
+
 
 router.get('/', (req, res) => {
     res.render('home');
@@ -276,6 +276,10 @@ router.post('/delete', (req, res) => {
         console.log('successfully deleted instance..');
         res.redirect('/profile')
     })
+})*/
+
+router.get('/', (req, res) => {
+    res.status(200).send('still working!')
 })
 
 module.exports = router; 
