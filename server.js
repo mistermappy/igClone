@@ -23,11 +23,12 @@ var upload = multer({
 });
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('d2rp83vuathmlu', 'qqfapouvhewocy', 'c4a6920ceb8cd92f47466624c28136032fbca36e2c80a7e021a3068285886116', {
-    host: 'ec2-107-22-192-11.compute-1.amazonaws.com',
-    port: 5432,
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
-    ssl: true
+    protocol: 'postgres',
+    dialectOptions: {
+        ssl: true
+    }
 })
 
 sequelize
