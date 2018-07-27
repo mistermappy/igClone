@@ -11,7 +11,7 @@ var imager = require('multer-imager');
 var s3 = new aws.S3()
 var fs = require('fs')
 
-var upload = multer({
+/*var upload = multer({
     storage : multers3({
         s3: s3, 
         bucket: 'instagram-clone-photos-version1',
@@ -86,7 +86,7 @@ router.use(express.urlencoded({ extended: false }));
 router.use(cookieParser());
 router.use(express.static(path.join(__dirname, 'public')));
 
-/**/
+/*
 function compareValues(key, order='asc') {
     return function(a, b) {
       if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -141,7 +141,7 @@ router.get('/loginerror', (req, res) => {
     console.log(req.user.username)
     userName = req.user.username; 
     res.redirect('/home');
-});*/
+});
 
 router.post('/login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, info) {
@@ -282,6 +282,10 @@ router.post('/delete', (req, res) => {
         console.log('successfully deleted instance..');
         res.redirect('/profile')
     })
+})*/
+
+router.get('/', (req, res) => {
+    res.status(200).send('works now!');
 })
 
 module.exports = router; 
