@@ -282,4 +282,8 @@ router.get('/', (req, res) => {
     res.status(200).send('still working!')
 })
 
+router.get('/second-route', (req, res) => {
+    res.send('second route works!')
+})
+
 module.exports = router; 
