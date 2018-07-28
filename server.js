@@ -62,7 +62,7 @@ Likes.belongsTo(Users, {foreignKey: "userName"});
 //app.set('view engine', 'jade');
 
 require('./config/config')
-require('./strategies/passport-local.js')(passport); 
+//require('./strategies/passport-local.js')(passport); 
 
 var bodyParser = require('body-parser');
 
@@ -126,9 +126,9 @@ router.get('/signuperror', (req, res) => {
     res.render('signuperror');
 })
 
-router.post('/signup', passport.authenticate('local-signup', {successRedirect: '/login', failureRedirect: '/signuperror'}), (req, res) => {
+/*router.post('/signup', passport.authenticate('local-signup', {successRedirect: '/login', failureRedirect: '/signuperror'}), (req, res) => {
     res.redirect('/login');
-})
+})*/
 
 router.get('/login', (req, res) => {
     res.render('login');
@@ -138,7 +138,7 @@ router.get('/loginerror', (req, res) => {
     res.render('loginerror');
 })
 
-router.post('/login', function(req, res, next) {
+/*router.post('/login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, info) {
       if (err) { 
           return next(err); 
@@ -151,7 +151,7 @@ router.post('/login', function(req, res, next) {
       return res.redirect('/home');
 
     })(req, res, next);
-  })
+  })*/
 
 router.get('/faq', (req, res) => {
     res.render('faq')

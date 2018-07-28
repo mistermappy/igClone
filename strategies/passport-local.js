@@ -1,9 +1,9 @@
 var LocalStrategy = require('passport-local').Strategy; 
-var bcrypt = require('bcrypt');
+//var bcrypt = require('bcrypt');
 var User = require('../models').Users
 var saltRounds = 10;
 
-module.exports = function(passport){ 
+/*module.exports = function(passport){ 
 
 	function getUserParams(req) {
     var body = req.body
@@ -83,3 +83,4 @@ module.exports = function(passport){
 	}
 
 }
+*/
