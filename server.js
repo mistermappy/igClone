@@ -23,14 +23,14 @@ var upload = multer({
 });
 
 const Sequelize = require('sequelize');
-/*const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     protocol: 'postgres',
     dialectOptions: {
         ssl: true
     }
-})*/
-const sequelize = new Sequelize('postgres://qqfapouvhewocy:c4a6920ceb8cd92f47466624c28136032fbca36e2c80a7e021a3068285886116@ec2-107-22-192-11.compute-1.amazonaws.com:5432/d2rp83vuathmlu');
+})
+//const sequelize = new Sequelize('postgres://qqfapouvhewocy:c4a6920ceb8cd92f47466624c28136032fbca36e2c80a7e021a3068285886116@ec2-107-22-192-11.compute-1.amazonaws.com:5432/d2rp83vuathmlu');
 
 sequelize
   .authenticate()

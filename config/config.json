@@ -5,8 +5,6 @@
     "database": "d2rp83vuathmlu",
     "host": "ec2-107-22-192-11.compute-1.amazonaws.com",
     "dialect": "postgres",
-    "native": "true",
-    "ssl": "true",
     "port": "5432"
   },
   "test": {
