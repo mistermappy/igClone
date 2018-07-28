@@ -9,7 +9,7 @@ var imager = require('multer-imager');
 var s3 = new aws.S3()
 var fs = require('fs')
 
-/*var upload = multer({
+var upload = multer({
     storage : multers3({
         s3: s3, 
         bucket: 'instagram-clone-photos-version1',
@@ -87,7 +87,7 @@ router.use(express.urlencoded({ extended: false }));
 router.use(cookieParser());
 router.use(express.static(path.join(__dirname, 'public')));
 
-/*
+
 function compareValues(key, order='asc') {
     return function(a, b) {
       if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -276,14 +276,6 @@ router.post('/delete', (req, res) => {
         console.log('successfully deleted instance..');
         res.redirect('/profile')
     })
-})*/
-
-router.get('/', (req, res) => {
-    res.status(200).send('still working!')
-})
-
-router.get('/second-route', (req, res) => {
-    res.send('second route works!')
 })
 
 module.exports = router; 
