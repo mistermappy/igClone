@@ -49,6 +49,7 @@ Ideas.hasMany(Likes, {foreignKey: "commentID"});
 Comments.belongsTo(Ideas, {foreignKey: "postID"});
 Ideas.belongsTo(Users, {foreignKey: 'userName'});
 Likes.belongsTo(Users, {foreignKey: "userName"});
+Comments.belongsTo(Users, {foreignKey: 'userName'})
 //Likes.belongsTo(Ideas, {foreignKey: 'userName'});
 
 //var db = require('./models/index.js');
@@ -137,12 +138,6 @@ router.get('/loginerror', (req, res) => {
     res.render('loginerror');
 })
 
-/*router.post('/login', passport.authenticate('local-login'), (req, res) => {
-    console.log(req.user.username)
-    userName = req.user.username; 
-    res.redirect('/home');
-});*/
-
 router.post('/login', function(req, res, next) {
     passport.authenticate('local-login', function(err, user, info) {
       if (err) { 
@@ -186,7 +181,8 @@ router.get('/home', (req, res)=>{
                             {},
                             {
                                 comment_id: comment.id,
-                                comment_comments: comment.comments
+                                comment_comments: comment.comments,
+                                comment_from_userName: comment.userName
                             }
                         )
                     }),
@@ -225,11 +221,13 @@ router.post('/comments', (req, res)=>{
             .then(()=>{
                 return Comments.create({
                     comments: req.body.comment,
-                    postID: req.body.postID
+                    postID: req.body.postID,
+                    userName: userName
                 })
             })
             .then(()=>{
                 res.redirect('/home')
+                console.log(userName)
             });
 });
 

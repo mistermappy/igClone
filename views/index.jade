@@ -16,7 +16,7 @@ block content
     br
     script(type='text/javascript').
     -for(let i=0; i<idea.comments.length; i++){
-      h6= idea.comments[i].comment_comments
+      h6= idea.comments[i].comment_from_userName + ' :' + idea.comments[i].comment_comments
     -}
     span Liked by: 
     -for(let i=0; i<idea.likes.length; i++){
