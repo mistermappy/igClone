@@ -1,9 +1,9 @@
 var express = require('express');
+var app = express(); 
 var router = express.Router();
 var passport = require('passport');
 var session = require('express-session');
 var multer = require('multer'); 
-var sharp = require('sharp');
 var userPhotos = require('./model/photo');
 var aws = require('aws-sdk');
 var multers3 = require('multer-s3');
@@ -25,10 +25,15 @@ var upload = multer({
 });
 
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('users', 'postgres', 'nppsjuoll', {
+/*const sequelize = new Sequelize('users', 'postgres', 'nppsjuoll', {
     host: 'localhost',
     dialect: 'postgres'
-})
+})*/
+const sequelize = new Sequelize('icloneDatabase', 'mistermappy123', 'nppsjuoll', {
+    host: 'iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com',
+    port: 5432,
+    dialect: 'postgres'
+});
 
 sequelize
   .authenticate()
@@ -147,7 +152,7 @@ router.post('/login', function(req, res, next) {
           return res.redirect('/loginerror'); 
       };
       console.log(user.username); 
-      userName = user.username; 
+      userName = user.username;
       return res.redirect('/home');
 
     })(req, res, next);

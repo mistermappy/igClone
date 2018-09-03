@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node main.js"
   },
   "dependencies": {
     "aws-sdk": "^2.247.1",
@@ -24,13 +24,11 @@
     "multer-s3": "^2.7.0",
     "multer-s3-transform": "^2.3.2",
     "mysql": "^2.15.0",
-    "nodemon": "^1.17.3",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pg": "^7.4.1",
     "s3": "^4.4.0",
     "sequelize": "^4.23.0",
-    "sequelize-cli": "^4.0.0",
-    "sharp": "^0.20.2"
+    "sequelize-cli": "^4.0.0"
   }
 }
