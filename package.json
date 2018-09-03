@@ -27,6 +27,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pg": "^7.4.1",
+    "pg-native": "^3.0.0",
     "s3": "^4.4.0",
     "sequelize": "^4.23.0",
     "sequelize-cli": "^4.0.0"

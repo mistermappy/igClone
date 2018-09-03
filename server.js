@@ -4,7 +4,10 @@ var router = express.Router();
 var passport = require('passport');
 var session = require('express-session');
 var multer = require('multer'); 
+<<<<<<< HEAD
 var userPhotos = require('./model/photo');
+=======
+>>>>>>> 1cc1544f1704ac1023cf1d8c214412c9883e5a17
 var aws = require('aws-sdk');
 var multers3 = require('multer-s3');
 var imager = require('multer-imager');
@@ -25,6 +28,7 @@ var upload = multer({
 });
 
 const Sequelize = require('sequelize');
+<<<<<<< HEAD
 /*const sequelize = new Sequelize('users', 'postgres', 'nppsjuoll', {
     host: 'localhost',
     dialect: 'postgres'
@@ -34,6 +38,16 @@ const sequelize = new Sequelize('icloneDatabase', 'mistermappy123', 'nppsjuoll',
     port: 5432,
     dialect: 'postgres'
 });
+=======
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    protocol: 'postgres',
+    dialectOptions: {
+        ssl: true
+    }
+})
+//const sequelize = new Sequelize('postgres://qqfapouvhewocy:c4a6920ceb8cd92f47466624c28136032fbca36e2c80a7e021a3068285886116@ec2-107-22-192-11.compute-1.amazonaws.com:5432/d2rp83vuathmlu');
+>>>>>>> 1cc1544f1704ac1023cf1d8c214412c9883e5a17
 
 sequelize
   .authenticate()
@@ -66,7 +80,7 @@ Comments.belongsTo(Users, {foreignKey: 'userName'})
 //app.set('view engine', 'jade');
 
 require('./config/config')
-require('./strategies/passport-local.js')(passport); 
+//require('./strategies/passport-local.js')(passport); 
 
 var bodyParser = require('body-parser');
 
@@ -92,7 +106,7 @@ router.use(express.urlencoded({ extended: false }));
 router.use(cookieParser());
 router.use(express.static(path.join(__dirname, 'public')));
 
-/**/
+
 function compareValues(key, order='asc') {
     return function(a, b) {
       if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -116,8 +130,7 @@ function compareValues(key, order='asc') {
     };
 };
 
-//let userID;
-//let userName = require('./strategies/passport-local.js')(userName) 
+
 
 router.get('/', (req, res) => {
     res.render('home');
@@ -131,9 +144,9 @@ router.get('/signuperror', (req, res) => {
     res.render('signuperror');
 })
 
-router.post('/signup', passport.authenticate('local-signup', {successRedirect: '/login', failureRedirect: '/signuperror'}), (req, res) => {
+/*router.post('/signup', passport.authenticate('local-signup', {successRedirect: '/login', failureRedirect: '/signuperror'}), (req, res) => {
     res.redirect('/login');
-})
+})*/
 
 router.get('/login', (req, res) => {
     res.render('login');
@@ -143,7 +156,11 @@ router.get('/loginerror', (req, res) => {
     res.render('loginerror');
 })
 
+<<<<<<< HEAD
 router.post('/login', function(req, res, next) {
+=======
+/*router.post('/login', function(req, res, next) {
+>>>>>>> 1cc1544f1704ac1023cf1d8c214412c9883e5a17
     passport.authenticate('local-login', function(err, user, info) {
       if (err) { 
           return next(err); 
@@ -156,7 +173,7 @@ router.post('/login', function(req, res, next) {
       return res.redirect('/home');
 
     })(req, res, next);
-  })
+  })*/
 
 router.get('/faq', (req, res) => {
     res.render('faq')
