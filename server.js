@@ -67,7 +67,7 @@ Comments.belongsTo(Users, {foreignKey: 'userName'})
 //app.set('view engine', 'jade');
 
 require('./config/config')
-require('./strategies/passport-local.js')(passport); 
+//require('./strategies/passport-local.js')(passport); 
 
 var bodyParser = require('body-parser');
 
