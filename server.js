@@ -27,14 +27,14 @@ const Sequelize = require('sequelize');
 /*const sequelize = new Sequelize('users', 'postgres', 'nppsjuoll', {
     host: 'localhost',
     dialect: 'postgres'
-})*/
+})
 const sequelize = new Sequelize('icloneDatabase', 'mistermappy123', 'nppsjuoll', {
     host: 'iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com',
     port: 5432,
     dialect: 'postgres'
-});
+});*/
 
-//const sequelize = new Sequelize('postgres://mistermappy123:nppsjuoll@iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com/icloneDatabase?sslmode=verify-full&sslrootcert=config/rds-combined-ca-bundle.pem')
+const sequelize = new Sequelize('postgres://mistermappy123:nppsjuoll@iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com:5432/icloneDatabase?sslmode=verify-full&sslrootcert=config/rds-combined-ca-bundle.pem')
 
 sequelize
   .authenticate()
