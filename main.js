@@ -38,8 +38,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(process.env.PORT || 8081, ()=>{
-  console.log('it\'s working');
-})
-
 module.exports = app;
