@@ -6,6 +6,7 @@ var multer = require('multer');
 var aws = require('aws-sdk');
 var multers3 = require('multer-s3');
 var imager = require('multer-imager');
+AWS.config.loadFromPath('./config.json');
 var s3 = new aws.S3()
 var fs = require('fs')
 

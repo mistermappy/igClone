@@ -1,4 +1,4 @@
-{
+/*{
   "development": {
     "username": "mistermappy123",
     "password": "nppsjuoll",
@@ -21,5 +21,6 @@
     "dialect": "postgres",
     "use_env_variable": "DATABASE_URL"
   }
-}
+}*/
 
+{ "accessKeyId": AKIAJRUGJ42SBMITUXYA	, "secretAccessKey": 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 , "region": "us-west-1" }
