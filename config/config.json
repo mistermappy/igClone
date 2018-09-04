@@ -1,1 +1,23 @@
-{ "accessKeyId": "AKIAJRUGJ42SBMITUXYA"	, "secretAccessKey": "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" , "region": "us-west-1" }
+{
+  "development": {
+    "username": "mistermappy123",
+    "password": "nppsjuoll",
+    "database": "icloneDatabase",
+    "host": "iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "nppsjuoll",
+    "database": "users",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "nppsjuoll",
+    "database": "users",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
