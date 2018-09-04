@@ -1,4 +1,4 @@
-var config = require(__dirname + '/../config/config.json')[env];
+var config = require('./config/config.json')[env];
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
