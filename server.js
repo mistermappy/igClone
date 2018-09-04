@@ -1,4 +1,3 @@
-var config = require('./config/config.json')[env];
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -29,7 +28,7 @@ const Sequelize = require('sequelize');
     port: 5432,
     dialect: 'postgres'
 });*/
-const sequelize = new Sequelize(config.database, config.username, config.password, {
+const sequelize = new Sequelize('icloneDatabase', 'mistermappy123', 'nppsjuoll', {
     host: 'iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com',
     port: 5432,
     logging: console.log,
