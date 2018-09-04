@@ -1,5 +1,5 @@
+var config = require(__dirname + '/../config/config.json')[env];
 var express = require('express');
-var app = express(); 
 var router = express.Router();
 var passport = require('passport');
 var session = require('express-session');
@@ -24,17 +24,25 @@ var upload = multer({
 });
 
 const Sequelize = require('sequelize');
-/*const sequelize = new Sequelize('users', 'postgres', 'nppsjuoll', {
-    host: 'localhost',
-    dialect: 'postgres'
-})
-const sequelize = new Sequelize('icloneDatabase', 'mistermappy123', 'nppsjuoll', {
+/*const sequelize = new Sequelize('icloneDatabase', 'mistermappy123', 'nppsjuoll', {
     host: 'iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com',
     port: 5432,
     dialect: 'postgres'
 });*/
+const sequelize = new Sequelize(config.database, config.username, config.password, {
+    host: 'iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com',
+    port: 5432,
+    logging: console.log,
+    maxConcurrentQueries: 100,
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: 'Amazon RDS'
+    },
+    pool: { maxConnections: 5, maxIdleTime: 30},
+    language: 'en'
+})
 
-const sequelize = new Sequelize('postgres://mistermappy123:nppsjuoll@iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com:5432/icloneDatabase?sslmode=verify-full&sslrootcert=config/rds-combined-ca-bundle.pem')
+//const sequelize = new Sequelize('postgres://mistermappy123:nppsjuoll@iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com:5432/icloneDatabase?sslmode=verify-full&sslrootcert=config/rds-combined-ca-bundle.pem')
 
 sequelize
   .authenticate()
@@ -117,8 +125,6 @@ function compareValues(key, order='asc') {
     };
 };
 
-
-
 router.get('/', (req, res) => {
     res.render('home');
 })
@@ -131,9 +137,9 @@ router.get('/signuperror', (req, res) => {
     res.render('signuperror');
 })
 
-/*router.post('/signup', passport.authenticate('local-signup', {successRedirect: '/login', failureRedirect: '/signuperror'}), (req, res) => {
+router.post('/signup', passport.authenticate('local-signup', {successRedirect: '/login', failureRedirect: '/signuperror'}), (req, res) => {
     res.redirect('/login');
-})*/
+})
 
 router.get('/login', (req, res) => {
     res.render('login');
