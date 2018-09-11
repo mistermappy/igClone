@@ -1,16 +1,15 @@
-var express = require('express');
-var router = express.Router();
-var passport = require('passport');
-var session = require('express-session');
-var multer = require('multer'); 
-var aws = require('aws-sdk');
-var multers3 = require('multer-s3');
-var imager = require('multer-imager');
+let express = require('express');
+let router = express.Router();
+let passport = require('passport');
+let session = require('express-session');
+let multer = require('multer'); 
+let aws = require('aws-sdk');
+let multers3 = require('multer-s3');
 aws.config.loadFromPath('./S3/config.json');
-var s3 = new aws.S3()
-var fs = require('fs')
+let s3 = new aws.S3();
+let fs = require('fs');
 
-var upload = multer({
+let upload = multer({
     storage : multers3({
         s3: s3, 
         bucket: 'instagram-clone-photos-version1',
@@ -24,25 +23,11 @@ var upload = multer({
 });
 
 const Sequelize = require('sequelize');
-/*const sequelize = new Sequelize('icloneDatabase', 'mistermappy123', 'nppsjuoll', {
-    host: 'iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com',
-    port: 5432,
-    dialect: 'postgres'
-});*/
 const sequelize = new Sequelize('icloneDatabase', 'mistermappy123', 'nppsjuoll', {
     host: 'iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com',
     port: 5432,
-    logging: console.log,
-    maxConcurrentQueries: 100,
-    dialect: 'postgres',
-    dialectOptions: {
-        ssl: 'Amazon RDS'
-    },
-    pool: { maxConnections: 5, maxIdleTime: 30},
-    language: 'en'
-})
-
-//const sequelize = new Sequelize('postgres://mistermappy123:nppsjuoll@iclonedb.c09ceecqdowl.us-west-1.rds.amazonaws.com:5432/icloneDatabase?sslmode=verify-full&sslrootcert=config/rds-combined-ca-bundle.pem')
+    dialect: 'postgres'
+});
 
 sequelize
   .authenticate()
@@ -53,10 +38,10 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
-var Ideas = require('./models/ideas.js')(sequelize,Sequelize);
-var Comments = require('./models/comments.js')(sequelize, Sequelize);
-var Likes = require('./models/likes.js')(sequelize, Sequelize);
-var Users = require('./models/users.js')(sequelize, Sequelize);
+let Ideas = require('./models/ideas.js')(sequelize,Sequelize);
+let Comments = require('./models/comments.js')(sequelize, Sequelize);
+let Likes = require('./models/likes.js')(sequelize, Sequelize);
+let Users = require('./models/users.js')(sequelize, Sequelize);
 
 Ideas.hasMany(Comments, {foreignKey: "postID"});
 Ideas.hasMany(Likes, {foreignKey: "commentID"});
@@ -64,35 +49,27 @@ Comments.belongsTo(Ideas, {foreignKey: "postID"});
 Ideas.belongsTo(Users, {foreignKey: 'userName'});
 Likes.belongsTo(Users, {foreignKey: "userName"});
 Comments.belongsTo(Users, {foreignKey: 'userName'})
-//Likes.belongsTo(Ideas, {foreignKey: 'userName'});
-
-//var db = require('./models/index.js');
-//console.log(db)
-//Comments.belongsTo(Ideas);
-//Ideas.hasMany(Comments);
-
-//app.set('views', __dirname + '/views');
-//app.set('view engine', 'jade');
 
 require('./config/config')
-require('./strategies/passport-local.js')(passport); 
+require('./strategies/passport-local.js')(passport);
 
-var bodyParser = require('body-parser');
-
-//var createError = require('http-errors');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+let bodyParser = require('body-parser');
+let createError = require('http-errors');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
 
 router.use(session({
     key: 'user_sid',
-    secret: 'pixel pie',
+    secret: 'PixeltheShieldMaiden',
     resave: false,
     saveUninitialized: false,
     cookie: { 
+        secure: true, 
         expires: 3600000
     }
 }));
+
 router.use(passport.initialize());
 router.use(bodyParser());
 router.use(logger('dev'));
@@ -101,7 +78,6 @@ router.use(express.urlencoded({ extended: false }));
 router.use(cookieParser());
 router.use(express.static(path.join(__dirname, 'public')));
 
-
 function compareValues(key, order='asc') {
     return function(a, b) {
       if(!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -109,14 +85,14 @@ function compareValues(key, order='asc') {
           return 0; 
       }
   
-      const varA = (typeof a[key] === 'string') ? 
+      const letA = (typeof a[key] === 'string') ? 
         a[key].toUpperCase() : a[key];
-      const varB = (typeof b[key] === 'string') ? 
+      const letB = (typeof b[key] === 'string') ? 
         b[key].toUpperCase() : b[key];
       let comparison = 0;
-      if (varA > varB) {
+      if (letA > letB) {
         comparison = 1;
-      } else if (varA < varB) {
+      } else if (letA < letB) {
         comparison = -1;
       }
       return (
@@ -127,29 +103,31 @@ function compareValues(key, order='asc') {
 
 router.get('/', (req, res) => {
     res.render('home');
-})
+});
 
 router.get('/signup', (req, res) => {
-    res.render('signup')
-})
+    res.render('signup');
+});
 
 router.get('/signuperror', (req, res) => {
     res.render('signuperror');
-})
+});
 
 router.post('/signup', passport.authenticate('local-signup', {successRedirect: '/login', failureRedirect: '/signuperror'}), (req, res) => {
     res.redirect('/login');
-})
+});
 
 router.get('/login', (req, res) => {
     res.render('login');
-})
+});
 
 router.get('/loginerror', (req, res) => {
     res.render('loginerror');
-})
+});
 
 router.post('/login', function(req, res, next) {
+    console.log(req.session);
+    console.log('isAUTHENTICATED is: ', req.isAuthenticated());
     passport.authenticate('local-login', function(err, user, info) {
       if (err) { 
           return next(err); 
@@ -162,14 +140,13 @@ router.post('/login', function(req, res, next) {
       return res.redirect('/home');
 
     })(req, res, next);
-  })
+});
 
 router.get('/faq', (req, res) => {
     res.render('faq')
 });
 
 router.get('/home', (req, res)=>{
-  
     Ideas.findAll({
         include: [
             {
@@ -207,9 +184,8 @@ router.get('/home', (req, res)=>{
                         )
                     })
                 }
-            )
-        })
-        //console.log(ideas)
+            );
+        });
         let sortedObj = resObj.sort(compareValues("ideas_id"))
         //console.log(sortedObj);
         res.render('index', {title: "Instagram", ideas: sortedObj})
@@ -217,7 +193,6 @@ router.get('/home', (req, res)=>{
 });
 
 router.post('/home', upload.single('imageUpload'), (req, res)=>{
-    //console.log(req.file)
     Ideas.create({
         title: req.body.title,
         description: req.file.key,
@@ -268,7 +243,7 @@ router.post('/likes', (req, res) => {
                 res.redirect('/home')
             })
         }
-    })
+    });
 });
 
 router.get('/profile', (req, res) => {
@@ -279,8 +254,8 @@ router.get('/profile', (req, res) => {
     })
     .then(posts => {
         res.render('profile', {posts:posts})
-    })
-})
+    });
+});
 
 router.post('/delete', (req, res) => {
     Ideas.destroy({
@@ -290,7 +265,7 @@ router.post('/delete', (req, res) => {
     }).then(()=>{
         console.log('successfully deleted instance..');
         res.redirect('/profile')
-    })
-})
+    });
+});
 
 module.exports = router; 

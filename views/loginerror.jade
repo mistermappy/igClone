@@ -13,8 +13,8 @@ block content
                 h2 Login
                 input(name='username', type='text', placeholder='Username', required="")
                 input(name='password', type='password', placeholder='Password', required="")
-                input(type='submit', value='Submit')
+                input.btn.btn-primary(type='submit', value='Submit')
         #error        
-            h5 bad username/password
+            h5(class='alert alert-warning', role='alert') bad username/password
         h4 dont have an account yet? 
             a(href='/signup') Sign Up
